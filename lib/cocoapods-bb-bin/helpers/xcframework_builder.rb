@@ -3,13 +3,11 @@
 require 'cocoapods/command/gen'
 require 'cocoapods/generate'
 
-require 'cocoapods-framework/config'
-require 'cocoapods-framework/util'
-require 'cocoapods-framework/xbuilder'
-require 'cocoapods-framework/frameworker'
-require 'cocoapods-framework/muti_frameworker'
-#这个放在最后一个
-require 'cocoapods-framework/command'
+require 'cocoapods-xcframework/config'
+require 'cocoapods-xcframework/util'
+require 'cocoapods-xcframework/xbuilder'
+require 'cocoapods-xcframework/frameworker'
+require 'cocoapods-xcframework/muti_frameworker'
 
 module CBin
     class XCFramework
