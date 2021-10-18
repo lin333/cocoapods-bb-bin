@@ -20,6 +20,7 @@ module CBin
       def load_build_config
         @white_pod_list = []
         @ignore_git_list = []
+        @ignore_http_list = []
         project_root = Pod::Config.instance.project_root
         path = File.join(project_root.to_s, 'BinArchive.json')
 
@@ -30,7 +31,7 @@ module CBin
           @ignore_git_list = config['ignore-git-list']
           UI.warn "====== ignore_git_list = #{@ignore_git_list}" if @ignore_git_list
           @ignore_http_list = config['ignore-http-list']
-          UI.warn "====== ignore-http-list = #{@ignore-http-list}" if @ignore-http-list
+          UI.warn "====== ignore_http_list = #{@ignore_http_list}" if @ignore_http_list
           @xcode_build_name = config['xcode_build_path']
           @root_dir = config['root_dir'] unless config['root_dir'].nil?
         end
