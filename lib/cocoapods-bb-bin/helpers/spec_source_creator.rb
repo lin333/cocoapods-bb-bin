@@ -22,8 +22,10 @@ module CBin
       def create
         # spec = nil
         if CBin::Build::Utils.is_framework(@code_spec)
+          Pod::UI::puts "make framework spec"
           spec = create_framework_from_code_spec
         else
+          Pod::UI::puts "make source code spec"
           spec = create_from_code_spec
         end
 

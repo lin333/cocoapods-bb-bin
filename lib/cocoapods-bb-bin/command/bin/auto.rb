@@ -203,6 +203,8 @@ module Pod
           return name
         end
 
+        private
+
         # podfile创建软链接
         def link_podfile
           current_path = Pathname.pwd
@@ -210,16 +212,35 @@ module Pod
             if filename == 'Podfile'
               filepath = File.join(current_path,"#{filename}")
               return filepath
+            else
+              if filename != "." and filename != ".."
+                filepath = File.join(current_path,"#{filename}")
+                if File.directory?(filepath)
+                  # 二级目录遍历Podfile
+                  Dir.foreach(filepath) do |filename|
+                    if filename == 'Podfile'
+                      podfile_path = File.join(filepath,"#{filename}")
+                      create_link(podfile_path, current_path)
+                      return podfile_path
+                    end
+                  end
+                end
+              end
             end
           end
           # 没有找到podfile（小组件）
           podfile_path = File.join(current_path,"Example/Podfile")
           if File.file?(podfile_path)
-            system("ln -s #{podfile_path} #{current_path}")
-            UI.warn "创建软链接 podfile:#{podfile_path} link:#{current_path}"
+            create_link(podfile_path, current_path)
           end
         end
-    
+
+        def create_link(source_file, dest_file)
+          if File.file?(source_file)
+            system("ln -s #{source_file} #{dest_file}")
+            UI.puts "创建软链接 source:#{source_file} link:#{dest_file}"
+          end
+        end
       end
     end
   end

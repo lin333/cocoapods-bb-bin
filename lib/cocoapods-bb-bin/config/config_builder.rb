@@ -30,7 +30,7 @@ module CBin
           @ignore_git_list = config['ignore-git-list']
           UI.warn "====== ignore_git_list = #{@ignore_git_list}" if @ignore_git_list
           @ignore_http_list = config['ignore-http-list']
-
+          UI.warn "====== ignore-http-list = #{@ignore-http-list}" if @ignore-http-list
           @xcode_build_name = config['xcode_build_path']
           @root_dir = config['root_dir'] unless config['root_dir'].nil?
         end

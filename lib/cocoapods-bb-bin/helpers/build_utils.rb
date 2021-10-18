@@ -10,6 +10,9 @@ module CBin
         if Utils.uses_frameworks?
           return true
         end
+        if Utils.is_generate_frameworks(spec)
+          return true
+        end
 
         return Utils.is_swift_module(spec)
       end
@@ -55,6 +58,23 @@ module CBin
         end
 
         return uses_frameworks
+      end
+
+      def Utils.is_generate_frameworks(spec)
+        # framework
+        zip_file = CBin::Config::Builder.instance.framework_zip_file(spec) + ".zip"
+        res = File.exist?(zip_file)
+        Pod::UI::puts "zip_file = #{zip_file}"
+        unless res
+          # xcframework
+          zip_file = CBin::Config::Builder.instance.xcframework_zip_file(spec) + ".zip"
+          res = File.exist?(zip_file)
+          Pod::UI::puts "zip_file = #{zip_file}"
+        end
+        if res
+          is_framework = true
+        end
+        return is_framework
       end
 
     end
