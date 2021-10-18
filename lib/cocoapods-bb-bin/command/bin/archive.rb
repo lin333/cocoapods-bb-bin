@@ -170,12 +170,12 @@ module Pod
                   argvs += ['--use-podfile']
                 end
 
-                unless CBin::Build::Utils.uses_frameworks?
+                if CBin::Build::Utils.uses_frameworks? # 组件库重新生成pod工程引入静态库需要使用该选项，否则报cocoapods中verify_no_static_framework_transitive_dependencies验证无法通过 by hm 21/10/18
                   argvs += ['--use-libraries']
                 end
 
                 argvs << spec_file if spec_file
-
+                UI.puts "argvs:#{argvs}"
                 gen = Pod::Command::Gen.new(CLAide::ARGV.new(argvs))
                 gen.validate!
                 gen.run
