@@ -27,7 +27,7 @@ module CBin
         if File.exist?(path)
           config = JSON.parse(File.read(path))
           @white_pod_list = config['archive-white-pod-list']
-          UI.warn "====== archive-white-pod-list = #{@white_pod_list}" if @white_pod_list
+          UI.warn "====== white_pod_list = #{@white_pod_list}" if @white_pod_list
           @ignore_git_list = config['ignore-git-list']
           UI.warn "====== ignore_git_list = #{@ignore_git_list}" if @ignore_git_list
           @ignore_http_list = config['ignore-http-list']

@@ -56,6 +56,7 @@ module CBin
             build_static_framework
             unless @skip_archive
               unless  CBin::Build::Utils.is_framework(@spec)
+                UI.puts "build static library"
                 build_static_library
                 zip_static_library
               else

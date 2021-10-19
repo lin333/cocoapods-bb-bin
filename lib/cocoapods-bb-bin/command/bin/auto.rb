@@ -221,6 +221,8 @@ module Pod
                     if filename == 'Podfile'
                       podfile_path = File.join(filepath,"#{filename}")
                       create_link(podfile_path, current_path)
+                      pods_path = File.join(filepath,"Pods")
+                      create_link(pods_path, current_path)
                       return podfile_path
                     end
                   end
@@ -232,14 +234,14 @@ module Pod
           podfile_path = File.join(current_path,"Example/Podfile")
           if File.file?(podfile_path)
             create_link(podfile_path, current_path)
+            pods_path = File.join(current_path,"Example/Pods")
+            create_link(pods_path, current_path)
           end
         end
 
         def create_link(source_file, dest_file)
-          if File.file?(source_file)
-            system("ln -s #{source_file} #{dest_file}")
-            UI.puts "创建软链接 source:#{source_file} link:#{dest_file}"
-          end
+          system("ln -s #{source_file} #{dest_file}")
+          UI.puts "create link source:#{source_file} dest:#{dest_file}"
         end
       end
     end

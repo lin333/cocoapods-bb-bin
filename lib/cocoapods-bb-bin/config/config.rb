@@ -94,7 +94,7 @@ module CBin
 
     def config
       @config ||= begin
-                    @config = OpenStruct.new load_config
+        @config = OpenStruct.new load_config
         validate!
         @config
       end
@@ -131,6 +131,4 @@ module CBin
   def self.config
     @config ||= Config.new
   end
-
-
 end

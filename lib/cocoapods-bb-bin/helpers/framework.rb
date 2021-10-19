@@ -10,9 +10,10 @@ module CBin
     attr_reader :swift_module_path
     attr_reader :fwk_path
 
-    def initialize(name, platform)
+    def initialize(name, platform, embedded=false)
       @name = name
       @platform = platform
+      @embedded = embedded
     end
 
     def make
@@ -79,6 +80,11 @@ module CBin
 
     def make_root
       @root_path = Pathname.new(@platform)
+
+      if @embedded
+        @root_path += Pathname.new(@name + '.embeddedframework')
+      end
+      
       @root_path.mkpath unless @root_path.exist?
     end
   end

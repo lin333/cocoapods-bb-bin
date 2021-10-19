@@ -42,10 +42,11 @@ module CBin
 
         UI.puts "framework lipo build"
 
-        if CBin::Build::Utils.is_swift_module(@spec) || !CBin::Build::Utils.uses_frameworks?
+        # if CBin::Build::Utils.is_swift_module(@spec) || !CBin::Build::Utils.uses_frameworks?
+        if CBin::Build::Utils.is_framework(@spec) # 默认生成framework为静态库.a
           UI.section("Building static Library #{@spec}") do
             # defines = compile
-            UI.puts "swift framework lipo build"
+            UI.puts "static framework lipo build"
             # build_sim_libraries(defines)
             output = framework.versions_path + Pathname.new(@spec.name)
 

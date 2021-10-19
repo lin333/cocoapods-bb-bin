@@ -22,9 +22,10 @@ module Pod
       def podfile_for_spec(spec)
         generator = self
         dir = configuration.gen_dir_for_pod(spec.name)
+        project_name = configuration.project_name_for_spec(spec)
 
         Pod::Podfile.new do
-          project "#{spec.name}.xcodeproj"
+          project "#{project_name}.xcodeproj"
           workspace "#{spec.name}.xcworkspace"
 
           plugin 'cocoapods-generate'
@@ -101,16 +102,16 @@ module Pod
 
 
           inhibit_all_warnings! if generator.inhibit_all_warnings?
-          use_modular_headers! if generator.use_modular_headers?
+          # use_modular_headers! if generator.use_modular_headers?
+          # podfile 配置 use_frameworks! :linkage => :static 支持modulemap by hm 21/10/19
+          if generator.use_modular_headers? || generator.use_frameworks_value.to_s == '{:linkage=>:static}'
+            use_modular_headers!
+          end
 
           # This is the pod declaration for the local pod,
           # it will be inherited by the concrete target definitions below
-
           pod_options = generator.dependency_compilation_kwargs(spec.name)
           pod_options[:path] = spec.defined_in_file.relative_path_from(dir).to_s
-          # generator.configuration.podfile.dependencies[0].external_source
-
-
           { testspecs: test_specs, appspecs: app_specs }.each do |key, specs|
             pod_options[key] = specs.map { |s| s.name.sub(%r{^#{Regexp.escape spec.root.name}/}, '') }.sort unless specs.empty?
           end
@@ -196,4 +197,3 @@ module Pod
     end
   end
 end
-
