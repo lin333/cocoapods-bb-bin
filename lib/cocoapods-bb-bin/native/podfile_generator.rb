@@ -35,7 +35,7 @@ module Pod
           generator.podfile_plugins.each do |name, options|
             plugin(*[name, options].compact)
           end
-
+          Pod::UI::puts "====use_frameworks:#{generator.configuration.use_frameworks?}"
           use_frameworks!(generator.configuration.use_frameworks?)
 
           if (supported_swift_versions = generator.supported_swift_versions)
@@ -104,6 +104,10 @@ module Pod
           inhibit_all_warnings! if generator.inhibit_all_warnings?
           # use_modular_headers! if generator.use_modular_headers?
           # podfile 配置 use_frameworks! :linkage => :static 支持modulemap by hm 21/10/19
+          Pod::UI::puts "====use_frameworks_value:#{generator.use_frameworks_value}"
+          unless generator.use_frameworks_value
+            use_modular_headers! # 默认组件没有配置或者没有podfile，支持modulemap by hm 21/10/20
+          end
           if generator.use_modular_headers? || generator.use_frameworks_value.to_s == '{:linkage=>:static}'
             use_modular_headers!
           end

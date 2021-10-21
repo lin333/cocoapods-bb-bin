@@ -186,7 +186,8 @@ module CBin
           archs = ios_architectures
           # archs = %w[arm64 armv7 armv7s]
           archs.map do |arch|
-            xcodebuild(defines, "ARCHS=\'#{arch}\' OTHER_CFLAGS=\'-fembed-bitcode -Qunused-arguments\'","build-#{arch}",@build_model)
+            xcodebuild(defines, "-sdk iphoneos ARCHS=\'#{arch}\' OTHER_CFLAGS=\'-fembed-bitcode -Qunused-arguments\'","build-#{arch}",@build_model)
+            # xcodebuild(defines, "-sdk iphoneos ARCHS=\'#{arch}\' ","build-#{arch}",@build_model)
           end
         # else
           # xcodebuild(defines,options)
@@ -209,12 +210,12 @@ module CBin
          end
       end
 
-      def xcodebuild(defines = '', args = '', build_dir = 'build', build_model = 'Debug')
-
+      def xcodebuild(defines = '', args = '', build_dir = 'build', build_model = 'Debug', configuration = 'Release')
+        
         unless File.exist?("Pods.xcodeproj") #cocoapods-generate v2.0.0
-          command = "xcodebuild #{defines} #{args} CONFIGURATION_BUILD_DIR=#{File.join(File.expand_path("..", build_dir), File.basename(build_dir))} clean build -configuration #{build_model} -target #{target_name} -project ./Pods/Pods.xcodeproj 2>&1"
+          command = "xcodebuild #{defines} #{args} CONFIGURATION_BUILD_DIR=#{File.join(File.expand_path("..", build_dir), File.basename(build_dir))} clean build -configuration #{configuration} -target #{target_name} -project ./Pods/Pods.xcodeproj 2>&1"
         else
-          command = "xcodebuild #{defines} #{args} CONFIGURATION_BUILD_DIR=#{build_dir} clean build -configuration #{build_model} -target #{target_name} -project ./Pods.xcodeproj 2>&1"
+          command = "xcodebuild #{defines} #{args} CONFIGURATION_BUILD_DIR=#{build_dir} clean build -configuration #{configuration} -target #{target_name} -project ./Pods.xcodeproj 2>&1"
         end
 
         UI.message "command = #{command}"
@@ -333,6 +334,8 @@ module CBin
         if bundles.count > 0
           UI.message "Copying bundle files #{bundles}"
           bundle_files = bundles.join(' ')
+          raise Informative,  "source resource bundle no exist #{bundle_files}" unless File.exist?(bundle_files)
+          UI.message "[build dir]Copying resources current_path:#{Dir.pwd} bundle_files:#{bundle_files} res_path:#{framework.resources_path}"
           `cp -rp #{bundle_files} #{framework.resources_path} 2>&1`
         end
 
@@ -344,7 +347,7 @@ module CBin
           end
           raise "copy_resources #{spec_source_dir} no exist " unless File.exist?(spec_source_dir)
 
-          spec_source_dir = File.join(Dir.pwd,"#{@spec.name}")
+          # spec_source_dir = File.join(Dir.pwd,"#{@spec.name}") # 去除重复赋值，有些资源放在pods/组件目录下
           real_source_dir = spec_source_dir
         end
 
@@ -363,8 +366,10 @@ module CBin
           resources.each do |source|
             escape_resource << Shellwords.join(source)
           end
-          UI.message "Copying resources #{escape_resource}"
-          `cp -rp #{escape_resource.join(' ')} #{framework.resources_path}`
+          bundle_files = escape_resource.join(' ')
+          raise Informative,  "source resource bundle no exist #{bundle_files}" unless File.exist?(bundle_files)
+          UI.message "[search dir]Copying resources current_path:#{Dir.pwd} bundle_files:#{bundle_files} res_path:#{framework.resources_path}"
+          `cp -rp #{bundle_files} #{framework.resources_path} 2>&1`
         end
       end
 

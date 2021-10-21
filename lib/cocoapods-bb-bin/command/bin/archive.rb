@@ -165,8 +165,8 @@ module Pod
                   "--verbose",
                   *@additional_args
                 ]
-
-                if File.exist?(Pod::Config.instance.podfile_path)
+                podfile_path = Pod::Config.instance.podfile_path
+                if podfile_path && File.exist?(podfile_path)
                   argvs += ['--use-podfile']
                 end
 

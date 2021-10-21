@@ -30,11 +30,10 @@ module Pod
           if @help
           else
             puts "开始执行自动推送操作，"
-            podfile_path = link_podfile # 创建软链接
-  
             @env = argv.option('env') || 'dev'
             CBin.config.set_configuration_env(@env)
   
+            podfile_path = link_podfile # 创建软链接
             @podspec = argv.shift_argument || find_podspec
             @specification = Specification.from_file(@podspec)
   
@@ -200,6 +199,7 @@ module Pod
               end
             end
           end
+          raise Informative,  "podspec File no exist, please check" unless name
           return name
         end
 

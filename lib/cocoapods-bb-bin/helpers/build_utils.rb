@@ -48,6 +48,10 @@ module CBin
 
       def Utils.uses_frameworks?
         uses_frameworks = false
+        podfile_path = Pod::Config.instance.podfile_path
+        unless podfile_path
+          return true
+        end
         Pod::Config.instance.podfile.target_definitions.each do |key,value|
           if key != "Pods"
             uses_frameworks = value.uses_frameworks?
