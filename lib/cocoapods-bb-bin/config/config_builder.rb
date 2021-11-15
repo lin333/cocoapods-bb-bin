@@ -143,6 +143,10 @@ module CBin
 
       #编译target名，如 seeyou
       def target_name
+        podfile_path = Pod::Config.instance.podfile_path
+        unless podfile_path
+          return ""
+        end
         @target_name ||= begin
                            target_name_str =  Pod::Config.instance.podfile.root_target_definitions.first.children.first.to_s
                            target_name_str[5,target_name_str.length]

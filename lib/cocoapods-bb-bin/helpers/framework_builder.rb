@@ -266,14 +266,33 @@ module CBin
             module_map = File.read(module_map_file)
           end
         elsif public_headers.map(&:basename).map(&:to_s).include?("#{@spec.name}-umbrella.h")
-          module_map = <<-MAP
-          framework module #{@spec.name} {
-            umbrella header "#{@spec.name}-umbrella.h"
+          archs = ios_architectures + ios_architectures_sim
+          swift_Compatibility_Header = "build-#{archs.first}/Swift\ Compatibility\ Header/#{@spec.name}-Swift.h"
+          # 策略：针对混编组件，modulemap写入-Swift.h by hm 21.11.15
+          if File.exist?(swift_Compatibility_Header) # swift或swift与oc混编工程
+            module_map = <<-MAP
+framework module #{@spec.name} {
+  umbrella header "#{@spec.name}-umbrella.h"
 
-            export *
-            module * { export * }
-          }
-          MAP
+  export *
+  module * { export * }
+}
+
+module #{@spec.name}.Swift {
+    header "#{@spec.name}-Swift.h"
+    requires objc
+}
+MAP
+          else
+            module_map = <<-MAP
+framework module #{@spec.name} {
+  umbrella header "#{@spec.name}-umbrella.h"
+
+  export *
+  module * { export * }
+}
+MAP
+          end
         end
 
         unless module_map.nil?

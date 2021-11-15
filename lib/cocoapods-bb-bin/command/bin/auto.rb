@@ -29,7 +29,6 @@ module Pod
           @help = argv.flag?('help', false )
           if @help
           else
-            puts "开始执行自动推送操作，"
             @env = argv.option('env') || 'dev'
             CBin.config.set_configuration_env(@env)
   
@@ -132,7 +131,7 @@ module Pod
             argvs += ["--env=#{@env}"]
           end
           argvs += ["--configuration=#{@config}"]
-          puts "===auto argvs: #{argvs}"
+          # puts "===auto argvs: #{argvs}"
           archive = Pod::Command::Bin::Archive.new(CLAide::ARGV.new(argvs))
           archive.validate!
           sources_sepc = archive.run
@@ -189,7 +188,7 @@ module Pod
         def find_podspec
           name = nil
           Pathname.pwd.children.each do |child|
-            puts child
+            # puts child
             if File.file?(child)
               if child.extname == '.podspec'
                 name = File.basename(child)
@@ -221,8 +220,8 @@ module Pod
                     if filename == 'Podfile'
                       podfile_path = File.join(filepath,"#{filename}")
                       create_link(podfile_path, current_path)
-                      pods_path = File.join(filepath,"Pods")
-                      create_link(pods_path, current_path)
+                      # pods_path = File.join(filepath,"Pods")
+                      # create_link(pods_path, current_path)
                       return podfile_path
                     end
                   end
@@ -234,8 +233,8 @@ module Pod
           podfile_path = File.join(current_path,"Example/Podfile")
           if File.file?(podfile_path)
             create_link(podfile_path, current_path)
-            pods_path = File.join(current_path,"Example/Pods")
-            create_link(pods_path, current_path)
+            # pods_path = File.join(current_path,"Example/Pods")
+            # create_link(pods_path, current_path)
           end
         end
 

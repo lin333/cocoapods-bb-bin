@@ -175,7 +175,7 @@ module Pod
                 end
 
                 argvs << spec_file if spec_file
-                UI.puts "argvs:#{argvs}"
+                # UI.puts "argvs:#{argvs}"
                 gen = Pod::Command::Gen.new(CLAide::ARGV.new(argvs))
                 gen.validate!
                 gen.run

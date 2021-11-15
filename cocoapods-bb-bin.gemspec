@@ -22,7 +22,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'parallel'
   spec.add_dependency "cocoapods", '>= 1.10.0', '< 2.0'
   spec.add_dependency "cocoapods-generate", '~>2.0.1'#'>= 2.0.1', '< 3.0'
-  spec.add_dependency 'cocoapods-bb-xcframework', '< 1.0'
+  spec.add_dependency 'cocoapods-bb-xcframework', '>= 0.2.2', '< 1.0'
 
   spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'rake'
