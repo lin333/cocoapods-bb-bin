@@ -12,12 +12,13 @@ if Pod.match_version?('~> 1.4')
   require 'cocoapods-bb-bin/native/linter'
   require 'cocoapods-bb-bin/native/resolver'
   require 'cocoapods-bb-bin/native/source'
-  require 'cocoapods-bb-bin/native/validator'
+  # require 'cocoapods-bb-bin/native/validator' #移除使用cocoapods默认自带
   require 'cocoapods-bb-bin/native/acknowledgements'
   require 'cocoapods-bb-bin/native/sandbox_analyzer'
   require 'cocoapods-bb-bin/native/podspec_finder'
   require 'cocoapods-bb-bin/native/file_accessor'
   require 'cocoapods-bb-bin/native/pod_target_installer'
   require 'cocoapods-bb-bin/native/target_validator'
+  require 'cocoapods-bb-bin/native/push' # 支持modulemap & swift与oc工程混编
 
 end

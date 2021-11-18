@@ -8,7 +8,7 @@ require 'cocoapods/generate'
 require 'cocoapods-bb-bin/helpers/framework_builder'
 require 'cocoapods-bb-bin/helpers/library_builder'
 require 'cocoapods-bb-bin/helpers/sources_helper'
-require 'cocoapods-bb-bin/command/bin/spec/push'
+require 'cocoapods-bb-bin/command/bin/repo/push'
 
 module CBin
   class Upload
