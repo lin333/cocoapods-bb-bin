@@ -12,7 +12,7 @@ if Pod.match_version?('~> 1.4')
   require 'cocoapods-bb-bin/native/linter'
   require 'cocoapods-bb-bin/native/resolver'
   require 'cocoapods-bb-bin/native/source'
-  # require 'cocoapods-bb-bin/native/validator' #移除使用cocoapods默认自带
+  require 'cocoapods-bb-bin/native/validator' #使用cocoapods-1.11.2
   require 'cocoapods-bb-bin/native/acknowledgements'
   require 'cocoapods-bb-bin/native/sandbox_analyzer'
   require 'cocoapods-bb-bin/native/podspec_finder'

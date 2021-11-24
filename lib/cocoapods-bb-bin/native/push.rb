@@ -27,14 +27,15 @@ module Pod
           @skip_tests = argv.flag?('skip-tests', false)
           @allow_overwrite = argv.flag?('overwrite', true)
           super
+          @use_cocoapods_validator = argv.flag?('use_cocoapods_validator', false)# 配置参数cocoapods进行验证，内部进行hook,二进制hook，源码cocoapods进行验证
         end
 
         # Performs a full lint against the podspecs.
         #
         def validate_podspec_files
-          UI.puts "\nValidating #{'spec'.pluralize(count)}".yellow
+          UI.puts "\nbin Validating #{'spec'.pluralize(count)}".yellow
           podspec_files.each do |podspec|
-            validator = Validator.new(podspec, @source_urls)
+            validator = Validator.new(podspec, @source_urls, [], @use_cocoapods_validator)
             validator.allow_warnings = @allow_warnings
             validator.use_frameworks = @use_frameworks
             validator.use_static_frameworks = @use_static_frameworks

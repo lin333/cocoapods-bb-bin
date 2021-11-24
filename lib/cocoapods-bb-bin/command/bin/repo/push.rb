@@ -109,6 +109,7 @@ module Pod
                   '--skip-import-validation',
                   '--use-modular-headers',
                   '--swift-version=5.0',
+                  '--use_cocoapods_validator', #cocoapods验证
                   *@additional_args
                 ]
                 argvs += ['--verbose'] if @verbose

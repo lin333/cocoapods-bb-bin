@@ -32,7 +32,7 @@ module Pod
             @env = argv.option('env') || 'dev'
             CBin.config.set_configuration_env(@env)
   
-            podfile_path = link_podfile # 创建软链接
+            # podfile_path = link_podfile # 创建软链接 去除link操作 by hm 21/11/24
             @podspec = argv.shift_argument || find_podspec
             @specification = Specification.from_file(@podspec)
   
