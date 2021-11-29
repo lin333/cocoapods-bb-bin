@@ -13,7 +13,8 @@ module Pod
           DESC
 
           self.arguments = [
-            CLAide::Argument.new('NAME.podspec', false)
+            CLAide::Argument.new('REPO', true),
+            CLAide::Argument.new('NAME.podspec', false),
           ]
 
           def self.options
@@ -30,6 +31,8 @@ module Pod
           end
 
           def initialize(argv)
+            super
+            @repo = argv.shift_argument
             @podspec = argv.shift_argument
             @binary = argv.flag?('binary')
             @loose_options = argv.flag?('loose-options')
@@ -40,7 +43,7 @@ module Pod
             @allow_prerelease = argv.flag?('allow-prerelease')
             @use_static_frameworks = argv.flag?('use-static-frameworks', true)
             @bb_env = argv.flag?('bb-env', false)
-            super
+            
             @additional_args = argv.remainder!
             @message = argv.option('commit-message')
             @commit_message = argv.flag?('commit-message', false)
@@ -99,8 +102,12 @@ module Pod
                   end
                   @podspec = podspecs.first
                 end
+                new_repo = repo # 内部判断区源码还是二进制
+                if !@repo.nil?
+                  new_repo = @repo # 使用命令传入
+                end
                 argvs = [
-                  repo, # 内部判断区源码还是二进制
+                  new_repo, 
                   @podspec,
                   "--sources=#{sources_option(@code_dependencies, @sources)}",
                   # '--verbose'
