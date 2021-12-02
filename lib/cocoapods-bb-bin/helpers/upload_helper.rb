@@ -73,7 +73,8 @@ EOF
       # 上传二进制 podspec
       def push_binary_repo(binary_podsepc_json)
         argvs = [
-            "#{binary_podsepc_json}",
+            "#{binary_source.name}",  # repo
+            "#{binary_podsepc_json}", # spec
             "--binary",
             "--sources=#{sources_option(@code_dependencies, @sources)},https:\/\/cdn.cocoapods.org",
             "--skip-import-validation",

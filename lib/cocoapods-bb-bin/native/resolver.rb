@@ -126,8 +126,8 @@ module Pod
             source = use_binary ? sources_manager.binary_source : sources_manager.code_source
 
             spec_version = rspec.spec.version
-            UI.message 'cocoapods-bb-bin 插件'
-            UI.message "- 开始处理 #{rspec.spec.name} #{spec_version} 组件."
+            # UI.message 'cocoapods-bb-bin 插件'
+            # UI.message "- 开始处理 #{rspec.spec.name} #{spec_version} 组件."
 
             begin
               # 从新 source 中获取 spec,在bin archive中会异常，因为找不到
