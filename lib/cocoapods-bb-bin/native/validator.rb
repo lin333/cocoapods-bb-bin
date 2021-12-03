@@ -5,8 +5,9 @@ module Pod
     # @return [Boolean] 使用cocoapods进行验证，二进制库推送默认不采用cocoapods(1.11.2)验证
     #
     # attr_accessor :use_cocoapods_validator
-    def initialize(spec_or_path, source_urls, platforms = [], use_cocoapods_validator = false)
+    def initialize(spec_or_path, source_urls, platforms = [], use_cocoapods_validator = true)
       @use_cocoapods_validator = use_cocoapods_validator
+      UI.puts "use_cocoapods_validator = #{use_cocoapods_validator}"
       @use_frameworks = true
       @linter = Specification::Linter.new(spec_or_path)
       @source_urls = if @linter.spec && @linter.spec.dependencies.empty? && @linter.spec.recursive_subspecs.all? { |s| s.dependencies.empty? }

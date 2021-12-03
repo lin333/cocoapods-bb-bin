@@ -27,7 +27,7 @@ module Pod
           @skip_tests = argv.flag?('skip-tests', false)
           @allow_overwrite = argv.flag?('overwrite', true)
           super
-          @use_cocoapods_validator = argv.flag?('use_cocoapods_validator', false)# 配置参数cocoapods进行验证，内部进行hook,二进制hook，源码cocoapods进行验证
+          @use_cocoapods_validator = argv.flag?('cocoapods-validator', true)# 配置参数cocoapods进行验证，内部进行hook,二进制hook，源码cocoapods进行验证
         end
 
         # Performs a full lint against the podspecs.

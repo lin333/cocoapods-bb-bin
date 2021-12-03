@@ -38,7 +38,6 @@ module Pod
             @podspec = argv.shift_argument
             super
             @additional_args = argv.remainder!
-            @verbose = argv.flag?('verbose', false)
           end
 
           def run
@@ -109,11 +108,12 @@ module Pod
                   argvs += ['--verbose'] if @verbose
                 end
                 
-                # puts "pod lib lint argvs:#{argvs}"
+                puts "pod bin lib lint argvs:#{argvs}"
                 lint = Pod::Command::Lib::Lint.new(CLAide::ARGV.new(argvs))
                 lint.validate!
                 lint.run
               rescue Object => exception
+                UI.puts "fail....."
                 UI.puts exception
               end
             end

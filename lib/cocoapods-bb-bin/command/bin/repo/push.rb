@@ -31,7 +31,6 @@ module Pod
           end
 
           def initialize(argv)
-            super
             @repo = argv.shift_argument
             @podspec = argv.shift_argument
             @binary = argv.flag?('binary')
@@ -43,13 +42,8 @@ module Pod
             @allow_prerelease = argv.flag?('allow-prerelease')
             @use_static_frameworks = argv.flag?('use-static-frameworks', true)
             @bb_env = argv.flag?('bb-env', false)
-            
+            super
             @additional_args = argv.remainder!
-            @message = argv.option('commit-message')
-            @commit_message = argv.flag?('commit-message', false)
-            @use_json = argv.flag?('use-json')
-            @verbose = argv.flag?('verbose', false)
-            @local_only = argv.flag?('local-only')
           end
 
           def run
@@ -110,13 +104,12 @@ module Pod
                   new_repo, 
                   @podspec,
                   "--sources=#{sources_option(@code_dependencies, @sources)}",
-                  # '--verbose'
+                  # '--verbose',
                   '--allow-warnings',
                   '--use-static-frameworks',
                   '--skip-import-validation',
                   '--use-modular-headers',
                   '--swift-version=5.0',
-                  '--use_cocoapods_validator', #cocoapods验证
                   *@additional_args
                 ]
                 argvs += ['--verbose'] if @verbose
@@ -124,7 +117,7 @@ module Pod
                 argvs += ['--use-json'] if @use_json
                 argvs += ['--local-only'] if @local_only
 
-                # UI.puts "pod repo push argvs:#{argvs}"
+                UI.puts "pod bin repo push argvs:#{argvs}"
                 push = Pod::Command::Repo::Push.new(CLAide::ARGV.new(argvs))
                 push.validate!
                 push.run

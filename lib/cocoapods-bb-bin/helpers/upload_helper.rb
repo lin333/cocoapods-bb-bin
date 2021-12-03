@@ -81,7 +81,8 @@ EOF
             "--use-libraries",
             "--allow-warnings",
             "--verbose",
-            "--code-dependencies"
+            "--code-dependencies",
+            '--no-cocoapods-validator', #不采用cocoapods验证
         ]
         if @verbose
           argvs += ['--verbose']
