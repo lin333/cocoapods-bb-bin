@@ -43,14 +43,21 @@ module CBin
         end
 
         @filename = file
+        # 拷贝二进制spec到源码spec by hm 22/1/19
+        `cp -fa #{file} #{sourceSpecFilePath}` 
       end
 
       def clear_spec_file
         File.delete(filename) if File.exist?(filename)
       end
 
+      # 二进制spec路径
       def filename
         @filename ||= "#{CBin::Config::Builder.instance.binary_json_dir_name}/#{spec.name}.binary.podspec.json"
+      end
+      # 源码spec路径（指向二进制库）
+      def sourceSpecFilePath
+        @filename ||= "#{CBin::Config::Builder.instance.binary_json_dir_name}/#{spec.name}.podspec.json"
       end
 
       private
