@@ -21,7 +21,8 @@ module Pod
               ['--no-zip', '不压缩静态 framework 为 zip'],
               ['--all-make', '对该组件的依赖库，全部制作为二进制组件'],
               ['--configuration', 'Build the specified configuration (e.g. Release ). Defaults to Debug'],
-              ['--env', "该组件上传的环境 %w[dev debug_iphoneos release_iphoneos]"]
+              ['--env', "该组件上传的环境 %w[dev debug_iphoneos release_iphoneos]"],
+              ['--all-push', '上传二进制同时，允许同时推送源码索引'],
           ].concat(Pod::Command::Gen.options).concat(super).uniq
         end
 
@@ -40,6 +41,7 @@ module Pod
             @allow_prerelease = argv.flag?('allow-prerelease')
             @framework_output = argv.flag?('framework-output', false )
             @xcframework_output = argv.flag?('xcframework-output', false )
+            @pushsourcespec = argv.flag?('all-push', false )
             @clean = argv.flag?('clean', true)
             @zip = argv.flag?('zip', true)
             @all_make = argv.flag?('all-make', false )
@@ -64,7 +66,7 @@ module Pod
           fail_push_specs = []
           sources_sepc.uniq.each do |spec|
             begin
-              fail_push_specs << spec unless CBin::Upload::Helper.new(spec,@code_dependencies,@sources).upload
+              fail_push_specs << spec unless CBin::Upload::Helper.new(spec,@code_dependencies,@sources,@pushsourcespec).upload
             rescue  Object => exception
               UI.puts exception
               fail_push_specs << spec
@@ -84,7 +86,6 @@ module Pod
               auto_success += "#{spec.name} | #{spec.version}\n"
               UI.warn "===【 #{spec.name} | #{spec.version} 】二进制组件制作完成 ！！！ "
             end
-            puts "==============  auto_success"
             puts auto_success
             ENV['auto_success'] = auto_success
           end

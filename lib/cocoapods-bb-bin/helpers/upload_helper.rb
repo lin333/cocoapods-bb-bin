@@ -15,10 +15,11 @@ module CBin
     class Helper
       include CBin::SourcesHelper
 
-      def initialize(spec,code_dependencies,sources)
+      def initialize(spec,code_dependencies,sources, pushsourcespec = false)
         @spec = spec
         @code_dependencies = code_dependencies
         @sources = sources
+        @pushsourcespec = pushsourcespec # 推送源码
       end
 
       def upload
@@ -29,7 +30,13 @@ module CBin
           res_zip = curl_zip
           if res_zip
             filename = spec_creator
+            Pod::UI.message "上传二进制 podspec: #{filename}"
             push_binary_repo(filename)
+            # 上传源码 podspec
+            if @pushsourcespec
+              Pod::UI.message "上传源码 podspec: #{@spec_creator.sourceSpecFilePath}"
+              push_source_repo(@spec_creator.sourceSpecFilePath)
+            end
           end
           res_zip
         end
@@ -37,6 +44,7 @@ module CBin
 
       def spec_creator
         spec_creator = CBin::SpecificationSource::Creator.new(@spec)
+        @spec_creator = spec_creator
         spec_creator.create
         spec_creator.write_spec_file
         spec_creator.filename
@@ -76,7 +84,7 @@ EOF
             "#{binary_source.name}",  # repo
             "#{binary_podsepc_json}", # spec
             "--binary",
-            "--sources=#{sources_option(@code_dependencies, @sources)},https:\/\/cdn.cocoapods.org",
+            "--sources=#{binary_source},https:\/\/cdn.cocoapods.org",
             "--skip-import-validation",
             "--use-libraries",
             "--allow-warnings",
@@ -87,12 +95,33 @@ EOF
         if @verbose
           argvs += ['--verbose']
         end
-
+        Pod::UI.message "上传二进制 argvs: #{argvs}"
         push = Pod::Command::Bin::Repo::Push.new(CLAide::ARGV.new(argvs))
         push.validate!
         push.run
       end
 
+      # 上传源码podspec
+      def push_source_repo(source_podsepc_json)
+        argvs = [
+          "#{code_source.name}",  # repo
+          "#{source_podsepc_json}", # spec
+          "--sources=#{code_source},https:\/\/cdn.cocoapods.org",
+          "--skip-import-validation",
+          "--use-libraries",
+          "--allow-warnings",
+          "--verbose",
+          "--code-dependencies",
+          '--no-cocoapods-validator', #不采用cocoapods验证
+        ]
+        if @verbose
+          argvs += ['--verbose']
+        end
+        Pod::UI.message "上传源码 argvs: #{argvs}"
+        push = Pod::Command::Bin::Repo::Push.new(CLAide::ARGV.new(argvs))
+        push.validate!
+        push.run
+      end
     end
   end
 end

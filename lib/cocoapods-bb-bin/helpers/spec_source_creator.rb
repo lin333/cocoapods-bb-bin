@@ -43,6 +43,8 @@ module CBin
         end
 
         @filename = file
+        # Pod::UI::puts "===copy origin file: #{file}"
+        # Pod::UI::puts "===copy desc file: #{sourceSpecFilePath}"
         # 拷贝二进制spec到源码spec by hm 22/1/19
         `cp -fa #{file} #{sourceSpecFilePath}` 
       end
@@ -57,7 +59,7 @@ module CBin
       end
       # 源码spec路径（指向二进制库）
       def sourceSpecFilePath
-        @filename ||= "#{CBin::Config::Builder.instance.binary_json_dir_name}/#{spec.name}.podspec.json"
+        @sourcefilename ||= "#{CBin::Config::Builder.instance.binary_json_dir_name}/#{spec.name}.podspec.json"
       end
 
       private
