@@ -68,6 +68,21 @@ module CBin
 
       end
 
+      def is_build_finish
+        if is_build_xcframework
+          path = xcframework_name_zip
+        else
+          path = framework_name_zip
+        end
+        output_path =  File.join(zip_dir, path)
+        unless File.exist?(xcframework_name)
+          UI.puts "工程文件编译成功"
+          return true
+        end
+        UI.puts "工程文件编译失败"
+        return false
+      end
+
       # 是否编译xcframework库
       def is_build_xcframework
         if @xcframework_output == true
