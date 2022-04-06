@@ -4,6 +4,7 @@ require 'cocoapods/generate'
 require 'xcodeproj'
 require 'cocoapods-bb-bin/helpers/push_spec_helper'
 require 'cocoapods-bb-bin/helpers/build_helper'
+require 'cocoapods-bb-bin/helpers/spec_source_creator'
 
 module Pod
   class Command
@@ -18,6 +19,8 @@ module Pod
           [
             ['--sources', '私有源地址，多个用分号区分'],
             ['--no-clean', '保留构建中间产物'],
+            ['--skip-build-project', '跳过编译工程文件操作(直接推送假标签，操作慎重!!!)'],
+            ['--debug', 'debug环境只是验证工程编译是否ok，不进行标签推送操作'],
           ].concat(Pod::Command::Gen.options).concat(super).uniq
         end
 
@@ -31,6 +34,8 @@ module Pod
             @podspec = argv.shift_argument || find_podspec
             @sources = argv.option('sources') || []
             @clean = argv.flag?('no-clean', false)
+            @skip_build_project = argv.flag?('skip-build-project', false)
+            @is_debug = argv.flag?('debug', false)
             @platform = Platform.new(:ios)
           end
           super
@@ -42,15 +47,20 @@ module Pod
           end
 
         def run
-
           # 清除之前的缓存
           CBin::Config::Builder.instance.clean
-
           @spec = Specification.from_file(@podspec)
-          generate_project
-          swift_pods_buildsetting
-          if build_root_spec
-            # 工程编译ok，进行标签推送
+
+          if @skip_build_project
+            # 跳过工程编译
+            is_build_ok = true
+            Pod::UI.warn "请注意⚠️正在推送假标签！！！#{@podspec}==>#{@spec.name}(#{@spec.version})"
+          elsif
+            # step.1 工程编译
+            is_build_ok = check_build_workspace
+          end
+          if is_build_ok && !@is_debug
+            # step.2 工程编译ok，进行标签推送
             push_helper = CBin::Push::Helper.new()
             push_helper.push_source_repo(@podspec)
           end
@@ -74,6 +84,13 @@ module Pod
             return name
         end
 
+        # 编译工程目录
+        def check_build_workspace
+          generate_project
+          swift_pods_buildsetting
+          return build_root_spec
+        end
+
         private
         def build_root_spec
           builder = CBin::Build::Helper.new(@spec,
@@ -86,7 +103,7 @@ module Pod
                                             CBin::Config::Builder.instance.white_pod_list.include?(@spec.name),
                                             'Release')
           builder.build
-          builder.clean_workspace if @clean && !@all_make
+          builder.clean_workspace if @clean
           return builder.is_build_finish
         end
         def swift_pods_buildsetting
