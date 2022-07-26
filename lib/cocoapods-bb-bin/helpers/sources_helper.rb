@@ -29,8 +29,24 @@ module CBin
       sources
     end
 
+    def valid_sourcesV2(code_dependencies = false)
+      sources = [binary_source]
+      unless code_dependencies
+        sources << code_source
+        sources.reverse!
+      end
+      sources
+    end
+
+    # 二进制优先
     def sources_option(code_dependencies, additional_sources)
       (valid_sources(code_dependencies).map(&:url) + Array(additional_sources)).join(',')
     end
+
+    # 源码优先
+    def sources_optionV2(code_dependencies, additional_sources)
+      (valid_sourcesV2(code_dependencies).map(&:url) + Array(additional_sources)).join(',')
+    end
+
   end
 end

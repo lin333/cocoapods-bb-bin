@@ -61,6 +61,11 @@ module Pod
 
           @additional_args = argv.remainder!
           @build_finshed = false
+          @spec_sources = @sources
+          if @xcframework_output == true
+            # 生存xcframework优先使用源码仓库\二进制仓库
+            @spec_sources = "#{sources_optionV2(@code_dependencies, nil)},https:\/\/cdn.cocoapods.org"
+          end
         end
 
         def run
@@ -86,7 +91,7 @@ module Pod
                                             @platform,
                                             @framework_output,
                                             @xcframework_output,
-                                            @sources,
+                                            @spec_sources,
                                             @zip,
                                             @spec,
                                             CBin::Config::Builder.instance.white_pod_list.include?(@spec.name),
