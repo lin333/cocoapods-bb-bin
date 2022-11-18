@@ -6,7 +6,7 @@ module Pod
   class Command
     class Bin < Command
       class Auto < Bin
-        self.summary = '打开 workspace 工程.'
+        self.summary = '打开LBJLJBLJBLBJL workspace 工程.'
 
         self.arguments = [
             CLAide::Argument.new('NAME.podspec', false)

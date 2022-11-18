@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['humin1102@126.com']
   spec.description   = %q{cocoapods-bb-bin is a plugin which helps develpers switching pods between source code and binary.}
   spec.summary       = %q{cocoapods-bb-bin is a plugin which helps develpers switching pods between source code and binary.}
-  spec.homepage      = 'https://github.com/humin1102/cocoapods-bb-bin'
+  spec.homepage      = 'https://github.com/lin333/cocoapods-bb-bin'
   spec.license       = 'MIT'
 
   spec.files = Dir["lib/**/*.rb","spec/**/*.rb","lib/**/*.plist"] + %w{README.md LICENSE.txt }
